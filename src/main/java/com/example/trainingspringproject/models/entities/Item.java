@@ -1,11 +1,21 @@
 package com.example.trainingspringproject.models.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.util.Objects;
 
 @Entity
 @Table(name = "item")
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Item {
     @Column(name = "id")
     @Id

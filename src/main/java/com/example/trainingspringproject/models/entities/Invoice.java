@@ -1,6 +1,10 @@
 package com.example.trainingspringproject.models.entities;
 
 import com.example.trainingspringproject.models.enums.TransactionType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,6 +12,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "invoice")
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Invoice {
     @Column(name = "id")
     @Id
@@ -27,6 +36,11 @@ public class Invoice {
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
+
+    @PrePersist
+    public void toCreate()  {
+        setDate(LocalDate.now());
+    }
 
     @Override
     public boolean equals(Object o) {
