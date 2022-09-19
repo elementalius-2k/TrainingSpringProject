@@ -34,14 +34,14 @@ VALUES ((SELECT id FROM partner WHERE name = 'Partner 1'), (SELECT id FROM worke
        ((SELECT id FROM partner WHERE name = 'Partner 2'), (SELECT id FROM worker WHERE name = 'Petrov P.P.'),
         'Purchase', '01.01.2000');
 
-INSERT INTO item (invoice_id, product_id, quantity)
+INSERT INTO item (invoice_id, product_id, quantity, price)
 VALUES ((SELECT id FROM invoice WHERE (type = 'Selling' AND date = '01.01.2000')),
-        (SELECT id FROM product WHERE name = 'Milk'), 20),
+        (SELECT id FROM product WHERE name = 'Milk'), 20, 15.0),
        ((SELECT id FROM invoice WHERE (type = 'Selling' AND date = '01.01.2000')),
-        (SELECT id FROM product WHERE name = 'Yogurt'), 10),
+        (SELECT id FROM product WHERE name = 'Yogurt'), 10, 30.0),
        ((SELECT id FROM invoice WHERE (type = 'Purchase' AND date = '01.01.2000')),
-        (SELECT id FROM product WHERE name = 'Milk'), 30),
+        (SELECT id FROM product WHERE name = 'Milk'), 30, 10.0),
        ((SELECT id FROM invoice WHERE (type = 'Purchase' AND date = '01.01.2000')),
-        (SELECT id FROM product WHERE name = 'Yogurt'), 15),
+        (SELECT id FROM product WHERE name = 'Yogurt'), 15, 20.0),
        ((SELECT id FROM invoice WHERE (type = 'Purchase' AND date = '01.01.2000')),
-        (SELECT id FROM product WHERE name = 'Potatoes'), 50);
+        (SELECT id FROM product WHERE name = 'Potatoes'), 50, 12.25);

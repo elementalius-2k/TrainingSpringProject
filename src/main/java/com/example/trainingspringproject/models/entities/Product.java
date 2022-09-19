@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Objects;
 
 @Entity
@@ -37,15 +38,15 @@ public class Product {
     private String description;
 
     @Column(name = "quantity", nullable = false)
-    @Min(0)
+    @PositiveOrZero
     private Integer quantity;
 
     @Column(name = "income_price", nullable = false)
-    @Min(0)
+    @Positive
     private Double incomePrice;
 
     @Column(name = "outcome_price", nullable = false)
-    @Min(0)
+    @Positive
     private Double outcomePrice;
 
     @Override

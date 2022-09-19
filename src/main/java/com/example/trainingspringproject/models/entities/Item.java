@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 @Entity
@@ -22,7 +22,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 
@@ -30,9 +30,13 @@ public class Item {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Min(0)
+    @Positive
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Positive
+    @Column(name = "price", nullable = false)
+    private Double price;
 
     @Override
     public boolean equals(Object o) {

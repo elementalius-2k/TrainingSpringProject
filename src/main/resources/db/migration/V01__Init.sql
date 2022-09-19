@@ -53,5 +53,6 @@ CREATE TABLE Item
     id              BIGSERIAL   PRIMARY KEY,
     invoice_id      BIGSERIAL   NOT NULL REFERENCES Invoice(id),
     product_id      BIGSERIAL   NOT NULL REFERENCES Product(id),
-    quantity        INTEGER     NOT NULL CHECK (quantity > 0)
+    quantity        INTEGER     NOT NULL CHECK (quantity > 0),
+    price           REAL        NOT NULL CHECK (price > 0)
 );
