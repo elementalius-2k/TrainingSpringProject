@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface ProducerRepository extends JpaRepository<Producer, Long> {
     Optional<Producer> findByName(String name);
-
-    Optional<List<Producer>> findAllByAddressLike(String address);
+    List<Producer> findAllByAddressLike(String address);
 }

@@ -17,6 +17,9 @@ public class ItemRequestDto {
     @NotNull(message = "ID" + NULL_ERR_MESSAGE)
     private Long id;
 
+    @NotNull(message = "Invoice ID" + NULL_ERR_MESSAGE)
+    private Long invoiceId;
+
     @NotNull(message = "Product ID" + NULL_ERR_MESSAGE)
     private Long productId;
 

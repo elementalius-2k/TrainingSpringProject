@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
     Optional<Partner> findByName(String name);
     Optional<Partner> findByRequisites(String requisites);
-
-    Optional<List<Partner>> findAllByAddressLike(String address);
-    Optional<List<Partner>> findAllByEmailLike(String email);
+    List<Partner> findAllByAddressLike(String address);
+    List<Partner> findAllByEmailLike(String email);
 }

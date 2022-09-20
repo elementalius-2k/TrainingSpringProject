@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface WorkerRepository extends JpaRepository <Worker, Long> {
     Optional<Worker> findByName(String name);
-
-    Optional<List<Worker>> findAllByJob(String job);
+    List<Worker> findAllByJob(String job);
 }
