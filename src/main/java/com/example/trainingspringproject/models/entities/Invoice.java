@@ -25,11 +25,11 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "partner_id", nullable = false)
     private Partner partner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "worker_id", nullable = false)
     private Worker worker;
 
@@ -41,6 +41,16 @@ public class Invoice {
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
+
+    public void addItem(Item item) {
+        items.add(item);
+        item.setInvoice(this);
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+        item.setInvoice(null);
+    }
 
     @PrePersist
     public void toCreate()  {

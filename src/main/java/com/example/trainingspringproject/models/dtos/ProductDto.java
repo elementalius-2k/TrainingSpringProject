@@ -14,24 +14,21 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 public class ProductDto {
     private static final String NULL_ERR_MESSAGE = " in product is a required parameter.";
-    private static final String BLANK_ERR_MESSAGE = " in product can't ba blank.";
+    private static final String BLANK_ERR_MESSAGE = " in product can't be blank.";
     private static final String POSITIVE_ZERO_ERR_MESSAGE = " in product must be positive or zero.";
     private static final String POSITIVE_ERR_MESSAGE = " in product must be positive.";
 
     @NotNull(message = "ID" + NULL_ERR_MESSAGE)
     private Long id;
 
-    @NotNull(message = "Name" + NULL_ERR_MESSAGE)
     @NotBlank(message = "Name" + BLANK_ERR_MESSAGE)
     private String name;
 
     private String description;
 
-    @NotNull(message = "Group name" + NULL_ERR_MESSAGE)
     @NotBlank(message = "Group name" + BLANK_ERR_MESSAGE)
     private String productGroupName;
 
-    @NotNull(message = "Producer name" + NULL_ERR_MESSAGE)
     @NotBlank(message = "Producer name" + BLANK_ERR_MESSAGE)
     private String producerName;
 
