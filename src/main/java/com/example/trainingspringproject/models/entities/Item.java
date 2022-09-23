@@ -1,0 +1,63 @@
+package com.example.trainingspringproject.models.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.Positive;
+import java.util.Objects;
+
+@Entity
+@Table(name = "item")
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Item {
+    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Positive
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @Positive
+    @Column(name = "price", nullable = false)
+    private Double price;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", invoice=" + invoice +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
+    }
+}
