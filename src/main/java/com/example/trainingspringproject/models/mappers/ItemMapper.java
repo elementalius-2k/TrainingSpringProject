@@ -3,16 +3,28 @@ package com.example.trainingspringproject.models.mappers;
 import com.example.trainingspringproject.models.dtos.ItemRequestDto;
 import com.example.trainingspringproject.models.dtos.ItemResponseDto;
 import com.example.trainingspringproject.models.entities.Item;
+import com.example.trainingspringproject.repositories.InvoiceRepository;
+import com.example.trainingspringproject.repositories.ProductRepository;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface ItemMapper {
-    Item dtoToEntity(ItemRequestDto dto);
-    ItemResponseDto entityToDto(Item entity);
+public abstract class ItemMapper {
+    @Autowired
+    protected InvoiceRepository invoiceRepository;
+    @Autowired
+    protected ProductRepository productRepository;
 
-    List<Item> dtoToEntity(Collection<ItemRequestDto> dto);
-    List<ItemResponseDto> entityToDto(Collection<Item> entity);
+    @Mapping(target = "invoice", expression = "java(invoiceRepository.findById(dto.getInvoiceId()).get())")
+    @Mapping(target = "product", expression = "java(productRepository.findById(dto.getProductId()).get())")
+    public abstract Item dtoToEntity(ItemRequestDto dto);
+    @Mapping(target = "productId", expression = "java(entity.getProduct().getId())")
+    public abstract ItemResponseDto entityToDto(Item entity);
+
+    public abstract List<Item> dtoToEntity(Collection<ItemRequestDto> dto);
+    public abstract List<ItemResponseDto> entityToDto(Collection<Item> entity);
 }
