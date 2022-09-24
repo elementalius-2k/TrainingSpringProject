@@ -14,9 +14,6 @@ public class ItemRequestDto {
     private static final String NULL_ERR_MESSAGE = " in item is a required parameter.";
     private static final String POSITIVE_ERR_MESSAGE = " in item must be positive.";
 
-    @NotNull(message = "ID" + NULL_ERR_MESSAGE)
-    private Long id;
-
     @NotNull(message = "Invoice ID" + NULL_ERR_MESSAGE)
     private Long invoiceId;
 

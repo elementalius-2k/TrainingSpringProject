@@ -41,19 +41,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void create(@Valid InvoiceRequestDto dto) {
         List<ItemRequestDto> items = dto.getItems();
         for (ItemRequestDto item: items) {
-            if (dto.getType().equals(TransactionType.INCOME))
+            if (dto.getType().equals(TransactionType.INCOME)) {
                 productService.income(item.getProductId(), item.getQuantity());
-            if (dto.getType().equals(TransactionType.OUTCOME))
+                itemService.create(item, productService.findById(item.getProductId()).getIncomePrice());
+            }
+            if (dto.getType().equals(TransactionType.OUTCOME)) {
                 productService.outcome(item.getProductId(), item.getQuantity());
-            itemService.create(item);
+                itemService.create(item, productService.findById(item.getProductId()).getOutcomePrice());
+            }
         }
 
         Invoice invoice = mapper.dtoToEntity(dto);
-        invoice.setId(null);
         repository.save(invoice);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Invoice invoice = repository.findById(id)
                 .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + id));

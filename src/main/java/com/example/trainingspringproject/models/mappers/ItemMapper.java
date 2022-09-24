@@ -1,5 +1,6 @@
 package com.example.trainingspringproject.models.mappers;
 
+import com.example.trainingspringproject.exceptions.NothingFoundException;
 import com.example.trainingspringproject.models.dtos.ItemRequestDto;
 import com.example.trainingspringproject.models.dtos.ItemResponseDto;
 import com.example.trainingspringproject.models.entities.Item;
@@ -15,13 +16,19 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class ItemMapper {
     @Autowired
-    protected InvoiceRepository invoiceRepository;
+    private InvoiceRepository invoiceRepository;
     @Autowired
-    protected ProductRepository productRepository;
+    private ProductRepository productRepository;
 
-    @Mapping(target = "invoice", expression = "java(invoiceRepository.findById(dto.getInvoiceId()).get())")
-    @Mapping(target = "product", expression = "java(productRepository.findById(dto.getProductId()).get())")
-    public abstract Item dtoToEntity(ItemRequestDto dto);
+    public Item dtoToEntity(ItemRequestDto dto) {
+        Item item = new Item();
+        item.setQuantity(dto.getQuantity());
+        item.setInvoice(invoiceRepository.findById(dto.getInvoiceId())
+                .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + dto.getInvoiceId())));
+        item.setProduct(productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new NothingFoundException("Product", "id = " + dto.getProductId())));
+        return item;
+    }
     @Mapping(target = "productId", expression = "java(entity.getProduct().getId())")
     public abstract ItemResponseDto entityToDto(Item entity);
 

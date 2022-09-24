@@ -25,10 +25,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void create(@Valid ItemRequestDto requestDto) {
+    public void create(@Valid ItemRequestDto requestDto, double price) {
         Item item = mapper.dtoToEntity(requestDto);
+        item.setPrice(price);
         item.getInvoice().addItem(item);
-        item.setId(null);
         repository.save(item);
     }
 

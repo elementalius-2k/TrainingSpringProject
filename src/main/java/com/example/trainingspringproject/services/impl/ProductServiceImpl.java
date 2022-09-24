@@ -26,7 +26,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void create(@Valid ProductDto dto) {
         Product product = mapper.dtoToEntity(dto);
         product.setId(null);
