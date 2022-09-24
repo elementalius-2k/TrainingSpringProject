@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = ItemMapper.class)
 public abstract class InvoiceMapper {
     @Autowired
     private PartnerRepository partnerRepository;

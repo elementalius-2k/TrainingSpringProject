@@ -61,8 +61,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = repository.findById(id)
                 .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + id));
         List<Item> items = invoice.getItems();
-        for (Item item: items)
+        for (Item item: items) {
             invoice.removeItem(item);
+            itemService.delete(item.getId());
+        }
         repository.delete(invoice);
     }
 
