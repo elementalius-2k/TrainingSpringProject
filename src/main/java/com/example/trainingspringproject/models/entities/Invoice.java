@@ -22,7 +22,7 @@ import java.util.Objects;
 public class Invoice {
     @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -50,11 +50,6 @@ public class Invoice {
     public void removeItem(Item item) {
         items.remove(item);
         item.setInvoice(null);
-    }
-
-    @PrePersist
-    public void toCreate()  {
-        setDate(LocalDate.now());
     }
 
     @Override

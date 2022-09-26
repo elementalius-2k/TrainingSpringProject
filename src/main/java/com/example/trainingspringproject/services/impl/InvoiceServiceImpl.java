@@ -52,6 +52,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         Invoice invoice = mapper.dtoToEntity(dto);
+        invoice.setDate(LocalDate.now());
         repository.save(invoice);
     }
 
