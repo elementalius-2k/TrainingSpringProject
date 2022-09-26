@@ -44,7 +44,7 @@ CREATE TABLE Invoice
     id              BIGSERIAL   PRIMARY KEY,
     partner_id      BIGSERIAL   NOT NULL REFERENCES Partner(id),
     worker_id       BIGSERIAL   NOT NULL REFERENCES Worker(id),
-    type            TEXT        NOT NULL,
+    type            INTEGER     NOT NULL,
     date            DATE        NOT NULL
 );
 

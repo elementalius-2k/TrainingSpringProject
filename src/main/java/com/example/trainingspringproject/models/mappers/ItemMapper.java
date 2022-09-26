@@ -20,11 +20,11 @@ public abstract class ItemMapper {
     @Autowired
     private ProductRepository productRepository;
 
-    public Item dtoToEntity(ItemRequestDto dto) {
+    public Item dtoToEntity(ItemRequestDto dto, Long invoiceId) {
         Item item = new Item();
         item.setQuantity(dto.getQuantity());
-        item.setInvoice(invoiceRepository.findById(dto.getInvoiceId())
-                .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + dto.getInvoiceId())));
+        item.setInvoice(invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + invoiceId)));
         item.setProduct(productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new NothingFoundException("Product", "id = " + dto.getProductId())));
         return item;

@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -38,19 +36,6 @@ public class Invoice {
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
-
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items = new ArrayList<>();
-
-    public void addItem(Item item) {
-        items.add(item);
-        item.setInvoice(this);
-    }
-
-    public void removeItem(Item item) {
-        items.remove(item);
-        item.setInvoice(null);
-    }
 
     @Override
     public boolean equals(Object o) {

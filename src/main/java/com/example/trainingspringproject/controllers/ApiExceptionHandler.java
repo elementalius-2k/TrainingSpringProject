@@ -37,6 +37,12 @@ public class ApiExceptionHandler {
         return handle(e, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = RuntimeException.class)
+    public ResponseEntity<Object> handleOtherException(RuntimeException e) {
+        logger.error(e.getMessage(), e);
+        return handle(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     private ResponseEntity<Object> handle(RuntimeException e, HttpStatus status) {
         Map<String, String> body = new LinkedHashMap<>();
         body.put("message", e.getMessage());

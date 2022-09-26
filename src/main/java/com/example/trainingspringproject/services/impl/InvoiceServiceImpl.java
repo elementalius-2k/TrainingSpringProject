@@ -5,7 +5,6 @@ import com.example.trainingspringproject.models.dtos.InvoiceRequestDto;
 import com.example.trainingspringproject.models.dtos.InvoiceResponseDto;
 import com.example.trainingspringproject.models.dtos.ItemRequestDto;
 import com.example.trainingspringproject.models.entities.Invoice;
-import com.example.trainingspringproject.models.entities.Item;
 import com.example.trainingspringproject.models.enums.TransactionType;
 import com.example.trainingspringproject.models.mappers.InvoiceMapper;
 import com.example.trainingspringproject.repositories.InvoiceRepository;
@@ -39,21 +38,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public void create(@Valid InvoiceRequestDto dto) {
+        Invoice invoice = mapper.dtoToEntity(dto);
+        invoice.setDate(LocalDate.now());
+        repository.save(invoice);
+
         List<ItemRequestDto> items = dto.getItems();
         for (ItemRequestDto item: items) {
             if (dto.getType().equals(TransactionType.INCOME)) {
                 productService.income(item.getProductId(), item.getQuantity());
-                itemService.create(item, productService.findById(item.getProductId()).getIncomePrice());
+                itemService.create(item, invoice.getId(), productService.findById(item.getProductId()).getIncomePrice());
             }
             if (dto.getType().equals(TransactionType.OUTCOME)) {
                 productService.outcome(item.getProductId(), item.getQuantity());
-                itemService.create(item, productService.findById(item.getProductId()).getOutcomePrice());
+                itemService.create(item, invoice.getId(), productService.findById(item.getProductId()).getOutcomePrice());
             }
         }
-
-        Invoice invoice = mapper.dtoToEntity(dto);
-        invoice.setDate(LocalDate.now());
-        repository.save(invoice);
     }
 
     @Override
@@ -61,11 +60,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void delete(Long id) {
         Invoice invoice = repository.findById(id)
                 .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + id));
-        List<Item> items = invoice.getItems();
-        for (Item item: items) {
-            invoice.removeItem(item);
-            itemService.delete(item.getId());
-        }
         repository.delete(invoice);
     }
 
