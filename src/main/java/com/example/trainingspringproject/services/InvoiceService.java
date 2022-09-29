@@ -4,11 +4,12 @@ import com.example.trainingspringproject.models.dtos.InvoiceRequestDto;
 import com.example.trainingspringproject.models.dtos.InvoiceResponseDto;
 import com.example.trainingspringproject.models.enums.TransactionType;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface InvoiceService {
-    void create(InvoiceRequestDto dto);
+    void create(@Valid InvoiceRequestDto dto);
     void delete(Long id);
     InvoiceResponseDto findById(Long id);
     List<InvoiceResponseDto> findAll();

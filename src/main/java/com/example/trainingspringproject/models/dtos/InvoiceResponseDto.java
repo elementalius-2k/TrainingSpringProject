@@ -20,11 +20,9 @@ public class InvoiceResponseDto {
     @NotNull(message = "ID" + NULL_ERR_MESSAGE)
     private Long id;
 
-    @NotNull(message = "Partner name" + NULL_ERR_MESSAGE)
     @NotBlank(message = "Partner name" + BLANK_ERR_MESSAGE)
     private String partnerName;
 
-    @NotNull(message = "Worker name" + NULL_ERR_MESSAGE)
     @NotBlank(message = "Worker name" + BLANK_ERR_MESSAGE)
     private String workerName;
 

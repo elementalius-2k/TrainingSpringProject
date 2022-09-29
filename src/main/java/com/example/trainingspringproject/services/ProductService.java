@@ -8,4 +8,6 @@ public interface ProductService extends BaseService<ProductDto> {
     List<ProductDto> findAllByNameLike(String name);
     List<ProductDto> findAllByProducerId(Long producerId);
     List<ProductDto> findAllByProductGroupId(Long groupId);
+    void income(Long productId, int quantity);
+    void outcome(Long productId, int quantity);
 }

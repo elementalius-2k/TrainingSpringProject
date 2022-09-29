@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,14 +20,14 @@ import java.util.Objects;
 public class Invoice {
     @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "partner_id", nullable = false)
     private Partner partner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "worker_id", nullable = false)
     private Worker worker;
 
@@ -38,14 +36,6 @@ public class Invoice {
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
-
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items = new ArrayList<>();
-
-    @PrePersist
-    public void toCreate()  {
-        setDate(LocalDate.now());
-    }
 
     @Override
     public boolean equals(Object o) {

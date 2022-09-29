@@ -14,9 +14,6 @@ import java.util.List;
 public class InvoiceRequestDto {
     private static final String NULL_ERR_MESSAGE = " in invoice is a required parameter.";
 
-    @NotNull(message = "ID" + NULL_ERR_MESSAGE)
-    private Long id;
-
     @NotNull(message = "Partner ID" + NULL_ERR_MESSAGE)
     private Long partnerId;
 

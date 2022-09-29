@@ -28,50 +28,54 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     @Override
     @Transactional
     public void create(@Valid ProductGroupDto dto) {
-        checkExisting(dto);
+        //проверка уникальности name
+        if (repository.findByName(dto.getName()).isPresent())
+            throw new AlreadyExistsException("Product group with name " + dto.getName());
+
         ProductGroup productGroup = mapper.dtoToEntity(dto);
+        productGroup.setId(null);
         repository.save(productGroup);
     }
 
     @Override
     @Transactional
     public void update(@Valid ProductGroupDto dto) {
-        checkExisting(dto);
+        //проверка существования записи с нужным id
         ProductGroup oldData = repository.findById(dto.getId())
-                .orElseThrow(() -> new NothingFoundException("Product group with id " + dto.getId()));
+                .orElseThrow(() -> new NothingFoundException("Product group", "id = " + dto.getId()));
+        //если произошло изменение поля name, надо проверить, не нарушает ли новое значение уникальности в базе
+        if (!dto.getName().equals(oldData.getName()) && repository.findByName(dto.getName()).isPresent())
+            throw new AlreadyExistsException("Product group with name " + dto.getName());
+
         ProductGroup newData = mapper.dtoToEntity(dto);
         newData.setId(oldData.getId());
         repository.save(newData);
     }
 
-    private void checkExisting(ProductGroupDto dto) {
-        if (repository.findByName(dto.getName()).isPresent())
-            throw new AlreadyExistsException("Product group with name " + dto.getName());
-    }
-
     @Override
     public void delete(Long id) {
         ProductGroup productGroup = repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Product group with id " + id));
+                .orElseThrow(() -> new NothingFoundException("Product group", "id = " + id));
         repository.delete(productGroup);
     }
 
     @Override
     public ProductGroupDto findById(Long id) {
         return mapper.entityToDto(repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Product group with id " + id)));
+                .orElseThrow(() -> new NothingFoundException("Product group", "id = " + id)));
     }
 
     @Override
     public List<ProductGroupDto> findAll() {
         List<ProductGroupDto> list = mapper.entityToDto(repository.findAll());
         if (list.isEmpty())
-            throw new NothingFoundException();
+            throw new NothingFoundException("Product group", "all");
         return list;
     }
 
     @Override
     public ProductGroupDto findByName(String name) {
-        return null;
+        return mapper.entityToDto(repository.findByName(name)
+                .orElseThrow(() -> new NothingFoundException("Product group", "name = " + name)));
     }
 }

@@ -1,10 +1,7 @@
 package com.example.trainingspringproject.exceptions;
 
 public class NothingFoundException extends RuntimeException {
-    public NothingFoundException() {
-        super("Nothing was found in the database.");
-    }
-    public NothingFoundException(String message) {
-        super(message + " was not found in the database.");
+    public NothingFoundException(String entity, String criteria) {
+        super("No entities found! Entity: " + entity + ", criteria: " + criteria + ".");
     }
 }
