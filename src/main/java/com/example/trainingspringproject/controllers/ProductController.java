@@ -57,13 +57,13 @@ public class ProductController {
     }
 
     @GetMapping("/find-by-producer-id")
-    public List<ProductDto> findProductByProducerId(@RequestParam(name = "producer_id") Long producerId) {
+    public List<ProductDto> findProductsByProducerId(@RequestParam(name = "producer-id") Long producerId) {
         logger.info("Get products by producer id");
         return service.findAllByProducerId(producerId);
     }
 
     @GetMapping("/find-by-group-id")
-    public List<ProductDto> findProductsByGroupId(@RequestParam(name = "group_id") Long groupId) {
+    public List<ProductDto> findProductsByGroupId(@RequestParam(name = "group-id") Long groupId) {
         logger.info("Get products by product group id");
         return service.findAllByProductGroupId(groupId);
     }

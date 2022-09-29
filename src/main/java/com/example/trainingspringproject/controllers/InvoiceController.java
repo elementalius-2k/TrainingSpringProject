@@ -6,6 +6,7 @@ import com.example.trainingspringproject.models.enums.TransactionType;
 import com.example.trainingspringproject.services.InvoiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,13 +49,13 @@ public class InvoiceController {
     }
 
     @GetMapping("/find-by-partner-id")
-    public List<InvoiceResponseDto> findInvoicesByPartnerId(@RequestParam(name = "partner_id") Long partnerId) {
+    public List<InvoiceResponseDto> findInvoicesByPartnerId(@RequestParam(name = "partner-id") Long partnerId) {
         logger.info("Get invoices by partner id");
         return service.findAllByPartnerId(partnerId);
     }
 
     @GetMapping("/find-by-worker-id")
-    public List<InvoiceResponseDto> findInvoicesByWorkerId(@RequestParam(name = "worker_id") Long workerId) {
+    public List<InvoiceResponseDto> findInvoicesByWorkerId(@RequestParam(name = "worker-id") Long workerId) {
         logger.info("Get invoices by worker id");
         return service.findAllByWorkerId(workerId);
     }
@@ -66,7 +67,8 @@ public class InvoiceController {
     }
 
     @GetMapping("/find-by-date")
-    public List<InvoiceResponseDto> findInvoicesByDate(@RequestParam(name = "date")LocalDate date) {
+    public List<InvoiceResponseDto> findInvoicesByDate(@RequestParam(name = "date")
+                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         logger.info("Get invoices by date");
         return service.findAllByDate(date);
     }

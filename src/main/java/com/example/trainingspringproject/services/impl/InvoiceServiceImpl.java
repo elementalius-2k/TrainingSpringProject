@@ -74,7 +74,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAll());
         if (list.isEmpty())
             throw new NothingFoundException("Invoice", "all");
-        return null;
+        return list;
     }
 
     @Override
