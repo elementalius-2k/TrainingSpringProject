@@ -22,25 +22,25 @@ public class ProductGroupController {
 
     @PostMapping("/create")
     public void createProductGroup(@Valid @RequestBody ProductGroupDto dto) {
-        logger.info("Create product group");
+        logger.info("Create product group " + dto.toString());
         service.create(dto);
     }
 
     @PutMapping("/update")
     public void updateProductGroup(@Valid @RequestBody ProductGroupDto dto) {
-        logger.info("Update product group");
+        logger.info("Update product group " + dto.toString());
         service.update(dto);
     }
 
     @DeleteMapping("/delete")
     public void deleteProductGroup(@RequestParam(name = "id") Long id) {
-        logger.info("Delete product group");
+        logger.info("Delete product group by id = " + id);
         service.delete(id);
     }
 
     @GetMapping("/find-by-id")
     public ProductGroupDto findProductGroupById(@RequestParam(name = "id") Long id) {
-        logger.info("Get product group by id");
+        logger.info("Get product group by id = " + id);
         return service.findById(id);
     }
 
@@ -52,7 +52,7 @@ public class ProductGroupController {
 
     @GetMapping("/find-by-name")
     public ProductGroupDto findProductGroupByName(@RequestParam(name = "name") String name) {
-        logger.info("Get product group by name");
+        logger.info("Get product group by name = " + name);
         return service.findByName(name);
     }
 }

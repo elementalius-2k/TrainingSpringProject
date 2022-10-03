@@ -9,6 +9,7 @@ import com.example.trainingspringproject.repositories.ProducerRepository;
 import com.example.trainingspringproject.services.ProducerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -68,7 +69,7 @@ public class ProducerServiceImpl implements ProducerService {
     @Override
     public List<ProducerDto> findAll() {
         List<ProducerDto> list = mapper.entityToDto(repository.findAll());
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Producer", "all");
         return list;
     }
@@ -82,7 +83,7 @@ public class ProducerServiceImpl implements ProducerService {
     @Override
     public List<ProducerDto> findAllByAddressLike(String address) {
         List<ProducerDto> list = mapper.entityToDto(repository.findAllByAddressLike(address));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Producer", "address = " + address);
         return list;
     }

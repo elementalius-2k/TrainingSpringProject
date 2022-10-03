@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -152,7 +153,7 @@ class ProductGroupControllerTest {
 
     @Test
     void findAllProductGroups_thenReturnAllGroups() throws Exception {
-        List<ProductGroupDto> dtos = List.of(new ProductGroupDto());
+        List<ProductGroupDto> dtos = Collections.singletonList(new ProductGroupDto());
 
         doReturn(dtos).when(serviceMock).findAll();
 

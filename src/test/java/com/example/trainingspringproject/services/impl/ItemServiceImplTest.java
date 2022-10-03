@@ -8,27 +8,38 @@ import com.example.trainingspringproject.models.mappers.ItemMapper;
 import com.example.trainingspringproject.repositories.ItemRepository;
 import com.example.trainingspringproject.services.ItemService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ItemServiceImplTest {
-    @Autowired
     private ItemService service;
+    private Validator validator;
 
-    @MockBean
+    @Mock
     private ItemRepository repositoryMock;
-    @MockBean
+    @Mock
     private ItemMapper mapperMock;
+
+    @BeforeEach
+    void init() {
+        service = new ItemServiceImpl(repositoryMock, mapperMock);
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
 
     private final Long ID = 1L;
     private final Long INVOICE_ID = 1L;
@@ -39,12 +50,13 @@ class ItemServiceImplTest {
     @Test
     void create_thenSaveItem() {
         Item entity = new Item();
-        ItemRequestDto requestDto = new ItemRequestDto(PRODUCT_ID, QUANTITY);
+        ItemRequestDto dto = new ItemRequestDto(PRODUCT_ID, QUANTITY);
 
-        doReturn(entity).when(mapperMock).dtoToEntity(requestDto, INVOICE_ID);
+        doReturn(entity).when(mapperMock).dtoToEntity(dto, INVOICE_ID);
 
-        service.create(requestDto, INVOICE_ID, PRICE);
+        service.create(dto, INVOICE_ID, PRICE);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
     }
 
@@ -52,7 +64,7 @@ class ItemServiceImplTest {
     void create_whenItemHasInvalidParameters_thenThrowException() {
         ItemRequestDto dto = new ItemRequestDto();
 
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.create(dto, INVOICE_ID, PRICE));
+        Assertions.assertFalse(validator.validate(dto).isEmpty());
     }
 
     @Test
@@ -75,9 +87,8 @@ class ItemServiceImplTest {
 
     @Test
     void findAllByInvoiceId_whenItemsWithInvoiceIdExist_thenReturnItems() {
-        List<Item> entities = new ArrayList<>();
-        List<ItemResponseDto> dtos = new ArrayList<>();
-        dtos.add(new ItemResponseDto());
+        List<Item> entities = Collections.emptyList();
+        List<ItemResponseDto> dtos = Collections.singletonList(new ItemResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByInvoiceId(INVOICE_ID);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -87,7 +98,7 @@ class ItemServiceImplTest {
 
     @Test
     void findAllByInvoiceId_whenItemsWithInvoiceIdNotExist_thenThrowException() {
-        List<Item> entities = new ArrayList<>();
+        List<Item> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByInvoiceId(INVOICE_ID);
 

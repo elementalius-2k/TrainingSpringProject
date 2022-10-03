@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -37,6 +36,6 @@ public abstract class ProductMapper {
     @Mapping(target = "producerName", expression = "java(entity.getProducer().getName())")
     public abstract ProductDto entityToDto(Product entity);
 
-    public abstract List<Product> dtoToEntity(Collection<ProductDto> dto);
-    public abstract List<ProductDto> entityToDto(Collection<Product> entity);
+    public abstract List<Product> dtoToEntity(Iterable<ProductDto> dto);
+    public abstract List<ProductDto> entityToDto(Iterable<Product> entity);
 }

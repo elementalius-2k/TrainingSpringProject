@@ -8,27 +8,38 @@ import com.example.trainingspringproject.models.mappers.PartnerMapper;
 import com.example.trainingspringproject.repositories.PartnerRepository;
 import com.example.trainingspringproject.services.PartnerService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class PartnerServiceImplTest {
-    @Autowired
     private PartnerService service;
+    private Validator validator;
 
-    @MockBean
+    @Mock
     private PartnerRepository repositoryMock;
-    @MockBean
+    @Mock
     private PartnerMapper mapperMock;
+
+    @BeforeEach
+    void init() {
+        service = new PartnerServiceImpl(repositoryMock, mapperMock);
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
 
     private final Long ID = 1L;
     private final String NAME = "Partner";
@@ -47,6 +58,7 @@ class PartnerServiceImplTest {
 
         service.create(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
     }
 
@@ -57,6 +69,7 @@ class PartnerServiceImplTest {
 
         doReturn(Optional.of(entity)).when(repositoryMock).findByName(NAME);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(AlreadyExistsException.class, () -> service.create(dto));
     }
 
@@ -68,14 +81,8 @@ class PartnerServiceImplTest {
         doReturn(Optional.empty()).when(repositoryMock).findByName(NAME);
         doReturn(Optional.of(entity)).when(repositoryMock).findByRequisites(REQUISITES);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(AlreadyExistsException.class, () -> service.create(dto));
-    }
-
-    @Test
-    void create_whenPartnerHasInvalidParameters_thenThrowException() {
-        PartnerDto dto = new PartnerDto();
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.create(dto));
     }
 
     @Test
@@ -90,14 +97,8 @@ class PartnerServiceImplTest {
 
         service.update(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
-    }
-
-    @Test
-    void update_whenPartnerHasInvalidParameters_thenThrowException() {
-        PartnerDto dto = new PartnerDto();
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.update(dto));
     }
 
     @Test
@@ -106,6 +107,7 @@ class PartnerServiceImplTest {
 
         doReturn(Optional.empty()).when(repositoryMock).findById(ID);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(NothingFoundException.class, () -> service.update(dto));
     }
 
@@ -117,6 +119,7 @@ class PartnerServiceImplTest {
         doReturn(Optional.of(entity)).when(repositoryMock).findById(ID);
         doReturn(Optional.of(entity)).when(repositoryMock).findByName(NAME);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(AlreadyExistsException.class, () -> service.update(dto));
     }
 
@@ -129,7 +132,15 @@ class PartnerServiceImplTest {
         doReturn(Optional.empty()).when(repositoryMock).findByName(NAME);
         doReturn(Optional.of(entity)).when(repositoryMock).findByRequisites(REQUISITES);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(AlreadyExistsException.class, () -> service.update(dto));
+    }
+
+    @Test
+    void create_update_whenPartnerHasInvalidParameters_thenValidationExceptionCreated() {
+        PartnerDto dto = new PartnerDto();
+
+        Assertions.assertFalse(validator.validate(dto).isEmpty());
     }
 
     @Test
@@ -170,9 +181,8 @@ class PartnerServiceImplTest {
 
     @Test
     void findAll_whenPartnersExist_thenReturnAllPartners() {
-        List<Partner> entities = new ArrayList<>();
-        List<PartnerDto> dtos = new ArrayList<>();
-        dtos.add(new PartnerDto());
+        List<Partner> entities = Collections.emptyList();
+        List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(entities).when(repositoryMock).findAll();
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -182,7 +192,7 @@ class PartnerServiceImplTest {
 
     @Test
     void findAll_whenNoPartnersExist_thenThrowException() {
-        List<Partner> entities = new ArrayList<>();
+        List<Partner> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAll();
 
@@ -227,9 +237,8 @@ class PartnerServiceImplTest {
 
     @Test
     void findAllByAddressLike_whenPartnersWithAddressExist_thenReturnPartners() {
-        List<Partner> entities = new ArrayList<>();
-        List<PartnerDto> dtos = new ArrayList<>();
-        dtos.add(new PartnerDto());
+        List<Partner> entities = Collections.emptyList();
+        List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(entities).when(repositoryMock).findAllByAddressLike(ADDRESS);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -239,7 +248,7 @@ class PartnerServiceImplTest {
 
     @Test
     void findAllByAddressLike_whenPartnersWithAddressNotExist_thenThrowException() {
-        List<Partner> entities = new ArrayList<>();
+        List<Partner> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByAddressLike(ADDRESS);
 
@@ -248,9 +257,8 @@ class PartnerServiceImplTest {
 
     @Test
     void findAllByEmailLike_whenPartnersWithEmailExist_thenReturnPartners() {
-        List<Partner> entities = new ArrayList<>();
-        List<PartnerDto> dtos = new ArrayList<>();
-        dtos.add(new PartnerDto());
+        List<Partner> entities = Collections.emptyList();
+        List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(entities).when(repositoryMock).findAllByEmailLike(EMAIL);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -260,7 +268,7 @@ class PartnerServiceImplTest {
 
     @Test
     void findAllByEmailLike_whenPartnersWithEmailNotExist_thenReturnPartners() {
-        List<Partner> entities = new ArrayList<>();
+        List<Partner> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByEmailLike(EMAIL);
 

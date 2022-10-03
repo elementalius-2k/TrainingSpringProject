@@ -22,25 +22,25 @@ public class ProductController {
 
     @PostMapping("/create")
     public void createProduct(@Valid @RequestBody ProductDto dto) {
-        logger.info("Create product");
+        logger.info("Create product " + dto.toString());
         service.create(dto);
     }
 
     @PutMapping("/update")
     public void updateProduct(@Valid @RequestBody ProductDto dto) {
-        logger.info("Update product");
+        logger.info("Update product " + dto.toString());
         service.update(dto);
     }
 
     @DeleteMapping("/delete")
     public void deleteProduct(@RequestParam(name = "id") Long id) {
-        logger.info("Delete product");
+        logger.info("Delete product by id = " + id);
         service.delete(id);
     }
 
     @GetMapping("/find-by-id")
     public ProductDto findProductById(@RequestParam(name = "id") Long id) {
-        logger.info("Get product by id");
+        logger.info("Get product by id = " + id);
         return service.findById(id);
     }
 
@@ -52,19 +52,19 @@ public class ProductController {
 
     @GetMapping("/find-by-name")
     public List<ProductDto> findProductsByName(@RequestParam(name = "name") String name) {
-        logger.info("Get products by name");
+        logger.info("Get products by name = " + name);
         return service.findAllByNameLike(name);
     }
 
     @GetMapping("/find-by-producer-id")
     public List<ProductDto> findProductsByProducerId(@RequestParam(name = "producer-id") Long producerId) {
-        logger.info("Get products by producer id");
+        logger.info("Get products by producer id = " + producerId);
         return service.findAllByProducerId(producerId);
     }
 
     @GetMapping("/find-by-group-id")
     public List<ProductDto> findProductsByGroupId(@RequestParam(name = "group-id") Long groupId) {
-        logger.info("Get products by product group id");
+        logger.info("Get products by product group id = " + groupId);
         return service.findAllByProductGroupId(groupId);
     }
 }

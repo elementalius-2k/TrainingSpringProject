@@ -11,7 +11,6 @@ import com.example.trainingspringproject.repositories.WorkerRepository;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = ItemMapper.class)
@@ -49,6 +48,6 @@ public abstract class InvoiceMapper {
         return dto;
     }
 
-    public abstract List<Invoice> dtoToEntity(Collection<InvoiceRequestDto> dto);
-    public abstract List<InvoiceResponseDto> entityToDto(Collection<Invoice> entity);
+    public abstract List<Invoice> dtoToEntity(Iterable<InvoiceRequestDto> dto);
+    public abstract List<InvoiceResponseDto> entityToDto(Iterable<Invoice> entity);
 }

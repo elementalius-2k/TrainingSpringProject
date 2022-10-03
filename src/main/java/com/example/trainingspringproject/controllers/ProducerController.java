@@ -22,25 +22,25 @@ public class ProducerController {
 
     @PostMapping("/create")
     public void createProducer(@Valid @RequestBody ProducerDto dto) {
-        logger.info("Create producer");
+        logger.info("Create producer " + dto.toString());
         service.create(dto);
     }
 
     @PutMapping("/update")
     public void updateProducer(@Valid @RequestBody ProducerDto dto) {
-        logger.info("Update producer");
+        logger.info("Update producer " + dto.toString());
         service.update(dto);
     }
 
     @DeleteMapping("/delete")
     public void deleteProducer(@RequestParam(name = "id") Long id) {
-        logger.info("Delete producer");
+        logger.info("Delete producer by id = " + id);
         service.delete(id);
     }
 
     @GetMapping("/find-by-id")
     public ProducerDto findProducerById(@RequestParam(name = "id") Long id) {
-        logger.info("Get producer by id");
+        logger.info("Get producer by id = " + id);
         return service.findById(id);
     }
 
@@ -52,13 +52,13 @@ public class ProducerController {
 
     @GetMapping("/find-by-name")
     public ProducerDto findProducerByName(@RequestParam(name = "name") String name) {
-        logger.info("Get producer by name");
+        logger.info("Get producer by name = " + name);
         return service.findByName(name);
     }
 
     @GetMapping("/find-by-address")
     public List<ProducerDto> findProducersByAddress(@RequestParam(name = "address") String address) {
-        logger.info("Get producers by address");
+        logger.info("Get producers by address = " + address);
         return service.findAllByAddressLike(address);
     }
 }

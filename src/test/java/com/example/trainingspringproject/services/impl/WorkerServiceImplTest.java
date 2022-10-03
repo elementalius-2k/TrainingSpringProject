@@ -8,27 +8,37 @@ import com.example.trainingspringproject.models.mappers.WorkerMapper;
 import com.example.trainingspringproject.repositories.WorkerRepository;
 import com.example.trainingspringproject.services.WorkerService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class WorkerServiceImplTest {
-    @Autowired
     private WorkerService service;
-
-    @MockBean
+    private Validator validator;
+    @Mock
     private WorkerRepository repositoryMock;
-    @MockBean
+    @Mock
     private WorkerMapper mapperMock;
+
+    @BeforeEach
+    void init() {
+        service = new WorkerServiceImpl(repositoryMock, mapperMock);
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
 
     private final Long ID = 1L;
     private final String NAME = "Ivanov I.I.";
@@ -44,6 +54,7 @@ class WorkerServiceImplTest {
 
         service.create(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
     }
 
@@ -54,14 +65,8 @@ class WorkerServiceImplTest {
 
         doReturn(Optional.of(entity)).when(repositoryMock).findByName(NAME);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(AlreadyExistsException.class, () -> service.create(dto));
-    }
-
-    @Test
-    void create_whenWorkerHasInvalidParameters_thenThrowException() {
-        WorkerDto dto = new WorkerDto();
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.create(dto));
     }
 
     @Test
@@ -75,14 +80,8 @@ class WorkerServiceImplTest {
 
         service.update(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
-    }
-
-    @Test
-    void update_whenWorkerHasInvalidParameters_thenThrowException() {
-        WorkerDto dto = new WorkerDto();
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.update(dto));
     }
 
     @Test
@@ -91,6 +90,7 @@ class WorkerServiceImplTest {
 
         doReturn(Optional.empty()).when(repositoryMock).findById(ID);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(NothingFoundException.class, () -> service.update(dto));
     }
 
@@ -102,7 +102,15 @@ class WorkerServiceImplTest {
         doReturn(Optional.of(entity)).when(repositoryMock).findById(ID);
         doReturn(Optional.of(entity)).when(repositoryMock).findByName(NAME);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(AlreadyExistsException.class, () -> service.update(dto));
+    }
+
+    @Test
+    void create_update_whenWorkerHasInvalidParameters_thenValidationExceptionCreated() {
+        WorkerDto dto = new WorkerDto();
+
+        Assertions.assertFalse(validator.validate(dto).isEmpty());
     }
 
     @Test
@@ -143,9 +151,8 @@ class WorkerServiceImplTest {
 
     @Test
     void findAll_whenWorkersExist_thenReturnAllWorkers() {
-        List<Worker> entities = new ArrayList<>();
-        List<WorkerDto> dtos = new ArrayList<>();
-        dtos.add(new WorkerDto());
+        List<Worker> entities = Collections.emptyList();
+        List<WorkerDto> dtos = Collections.singletonList(new WorkerDto());
 
         doReturn(entities).when(repositoryMock).findAll();
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -155,7 +162,7 @@ class WorkerServiceImplTest {
 
     @Test
     void findAll_whenNoWorkersExist_thenThrowException() {
-        List<Worker> entities = new ArrayList<>();
+        List<Worker> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAll();
 
@@ -182,9 +189,8 @@ class WorkerServiceImplTest {
 
     @Test
     void findAllByJob_whenWorkersWithJobExist_thenReturnWorkers() {
-        List<Worker> entities = new ArrayList<>();
-        List<WorkerDto> dtos = new ArrayList<>();
-        dtos.add(new WorkerDto());
+        List<Worker> entities = Collections.emptyList();
+        List<WorkerDto> dtos = Collections.singletonList(new WorkerDto());
 
         doReturn(entities).when(repositoryMock).findAllByJob(JOB);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -194,7 +200,7 @@ class WorkerServiceImplTest {
 
     @Test
     void findAllByJob_whenWorkersWithJobNotExist_thenThrowException() {
-        List<Worker> entities = new ArrayList<>();
+        List<Worker> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByJob(JOB);
 

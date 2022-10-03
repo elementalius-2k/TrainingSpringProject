@@ -8,28 +8,37 @@ import com.example.trainingspringproject.models.mappers.ProductMapper;
 import com.example.trainingspringproject.repositories.ProductRepository;
 import com.example.trainingspringproject.services.ProductService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.validation.ConstraintViolationException;
-
-import java.util.ArrayList;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
-    @Autowired
     private ProductService service;
-
-    @MockBean
+    private Validator validator;
+    @Mock
     private ProductRepository repositoryMock;
-    @MockBean
+    @Mock
     private ProductMapper mapperMock;
+
+    @BeforeEach
+    void init () {
+        service = new ProductServiceImpl(repositoryMock, mapperMock);
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
 
     private final Long ID = 1L;
     private final String NAME = "Name";
@@ -53,14 +62,8 @@ class ProductServiceImplTest {
 
         service.create(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
-    }
-
-    @Test
-    void create_whenProductHasInvalidParameters_thenThrowException() {
-        ProductDto dto = new ProductDto();
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.create(dto));
     }
 
     @Test
@@ -74,14 +77,8 @@ class ProductServiceImplTest {
 
         service.update(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
-    }
-
-    @Test
-    void update_whenProductHasInvalidParameters_thenThrowException() {
-        ProductDto dto = new ProductDto();
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.update(dto));
     }
 
     @Test
@@ -91,7 +88,15 @@ class ProductServiceImplTest {
 
         doReturn(Optional.empty()).when(repositoryMock).findById(ID);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         Assertions.assertThrows(NothingFoundException.class, () -> service.update(dto));
+    }
+
+    @Test
+    void create_update_whenProductHasInvalidParameters_thenValidationExceptionCreated() {
+        ProductDto dto = new ProductDto();
+
+        Assertions.assertFalse(validator.validate(dto).isEmpty());
     }
 
     @Test
@@ -132,9 +137,8 @@ class ProductServiceImplTest {
 
     @Test
     void findAll_whenProductsExist_thenReturnProducts() {
-        List<Product> entities = new ArrayList<>();
-        List<ProductDto> dtos = new ArrayList<>();
-        dtos.add(new ProductDto());
+        List<Product> entities = Collections.emptyList();
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAll();
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -144,7 +148,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAll_whenNoProductExist_thenThrowException() {
-        List<Product> entities = new ArrayList<>();
+        List<Product> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAll();
 
@@ -153,9 +157,8 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByNameLike_whenProductsWithNameExist_thenReturnProducts() {
-        List<Product> entities = new ArrayList<>();
-        List<ProductDto> dtos = new ArrayList<>();
-        dtos.add(new ProductDto());
+        List<Product> entities = Collections.emptyList();
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAllByNameLike(NAME);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -165,7 +168,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByNameLike_whenProductsWithNameNotExist_thenThrowException() {
-        List<Product> entities = new ArrayList<>();
+        List<Product> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByNameLike(NAME);
 
@@ -174,9 +177,8 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByProducerId_whenProductsWithProducerIdExists_thenReturnProducts() {
-        List<Product> entities = new ArrayList<>();
-        List<ProductDto> dtos = new ArrayList<>();
-        dtos.add(new ProductDto());
+        List<Product> entities = Collections.emptyList();
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAllByProducerId(PRODUCER_ID);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -186,7 +188,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByProducerId_whenProductsWithProducerIdNotExist_thenThrowException() {
-        List<Product> entities = new ArrayList<>();
+        List<Product> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByProducerId(PRODUCER_ID);
 
@@ -195,9 +197,8 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByProductGroupId_whenProductsWithGroupIdExist_thenReturnProducts() {
-        List<Product> entities = new ArrayList<>();
-        List<ProductDto> dtos = new ArrayList<>();
-        dtos.add(new ProductDto());
+        List<Product> entities = Collections.emptyList();
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAllByProductGroupId(GROUP_ID);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -207,7 +208,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByProductGroupId_whenProductsWithGroupIdNotExist_thenThrowException() {
-        List<Product> entities = new ArrayList<>();
+        List<Product> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByProductGroupId(GROUP_ID);
 

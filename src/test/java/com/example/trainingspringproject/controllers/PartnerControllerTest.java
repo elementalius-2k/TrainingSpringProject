@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -155,7 +156,7 @@ class PartnerControllerTest {
 
     @Test
     void findAllPartners_thenReturnPartners() throws Exception {
-        List<PartnerDto> dtos = List.of(new PartnerDto());
+        List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(dtos).when(serviceMock).findAll();
 
@@ -212,7 +213,7 @@ class PartnerControllerTest {
 
     @Test
     void findPartnersByAddress_thenReturnPartners() throws Exception {
-        List<PartnerDto> dtos = List.of(new PartnerDto());
+        List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(dtos).when(serviceMock).findAllByAddressLike(ADDRESS);
 
@@ -231,7 +232,7 @@ class PartnerControllerTest {
 
     @Test
     void findPartnersByEmail_thenReturnPartners() throws Exception {
-        List<PartnerDto> dtos = List.of(new PartnerDto());
+        List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(dtos).when(serviceMock).findAllByEmailLike(EMAIL);
 

@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -40,7 +41,7 @@ class InvoiceControllerTest {
     private final Long PARTNER_ID = 2L;
     private final Long WORKER_ID = 3L;
     private final TransactionType TYPE = TransactionType.INCOME;
-    private final List<ItemRequestDto> ITEMS = List.of(new ItemRequestDto());
+    private final List<ItemRequestDto> ITEMS = Collections.singletonList(new ItemRequestDto());
     private final LocalDate DATE = LocalDate.parse("2022-09-29");
 
     @Test
@@ -126,7 +127,7 @@ class InvoiceControllerTest {
 
     @Test
     void findAllInvoices_thenReturnAllInvoices() throws Exception {
-        List<InvoiceResponseDto> dtos = List.of(new InvoiceResponseDto());
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(dtos).when(serviceMock).findAll();
 
@@ -145,7 +146,7 @@ class InvoiceControllerTest {
 
     @Test
     void findInvoicesByPartnerId_thenReturnInvoices() throws Exception {
-        List<InvoiceResponseDto> dtos = List.of(new InvoiceResponseDto());
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(dtos).when(serviceMock).findAllByPartnerId(PARTNER_ID);
 
@@ -164,7 +165,7 @@ class InvoiceControllerTest {
 
     @Test
     void findInvoicesByWorkerId_thenReturnInvoices() throws Exception {
-        List<InvoiceResponseDto> dtos = List.of(new InvoiceResponseDto());
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(dtos).when(serviceMock).findAllByWorkerId(WORKER_ID);
 
@@ -183,7 +184,7 @@ class InvoiceControllerTest {
 
     @Test
     void findInvoicesByType_thenReturnInvoices() throws Exception {
-        List<InvoiceResponseDto> dtos = List.of(new InvoiceResponseDto());
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(dtos).when(serviceMock).findAllByType(TYPE);
 
@@ -202,7 +203,7 @@ class InvoiceControllerTest {
 
     @Test
     void findInvoicesByDate_thenReturnInvoices() throws Exception {
-        List<InvoiceResponseDto> dtos = List.of(new InvoiceResponseDto());
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(dtos).when(serviceMock).findAllByDate(DATE);
 

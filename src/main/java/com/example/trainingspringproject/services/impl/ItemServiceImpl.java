@@ -9,6 +9,7 @@ import com.example.trainingspringproject.repositories.ItemRepository;
 import com.example.trainingspringproject.services.ItemService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -43,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemResponseDto> findAllByInvoiceId(Long invoiceId) {
         List<ItemResponseDto> list = mapper.entityToDto(repository.findAllByInvoiceId(invoiceId));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Item", "invoice id = " + invoiceId);
         return list;
     }

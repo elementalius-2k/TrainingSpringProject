@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -153,7 +154,7 @@ class WorkerControllerTest {
 
     @Test
     void findAllWorkers_thenReturnAllWorkers() throws Exception {
-        List<WorkerDto> dtos = List.of(new WorkerDto());
+        List<WorkerDto> dtos = Collections.singletonList(new WorkerDto());
 
         doReturn(dtos).when(serviceMock).findAll();
 
@@ -191,7 +192,7 @@ class WorkerControllerTest {
 
     @Test
     void findWorkersByJob_thenReturnWorkers() throws Exception {
-        List<WorkerDto> dtos = List.of(new WorkerDto());
+        List<WorkerDto> dtos = Collections.singletonList(new WorkerDto());
 
         doReturn(dtos).when(serviceMock).findAllByJob(JOB);
 

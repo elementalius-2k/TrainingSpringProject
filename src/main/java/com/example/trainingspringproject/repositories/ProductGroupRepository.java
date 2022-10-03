@@ -1,10 +1,10 @@
 package com.example.trainingspringproject.repositories;
 
 import com.example.trainingspringproject.models.entities.ProductGroup;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ProductGroupRepository extends JpaRepository<ProductGroup, Long> {
+public interface ProductGroupRepository extends CrudRepository<ProductGroup, Long> {
     Optional<ProductGroup> findByName(String name);
 }

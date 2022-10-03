@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -135,7 +136,7 @@ class ProductControllerTest {
 
     @Test
     void findAllProducts_thenReturnAllProducts() throws Exception {
-        List<ProductDto> dtos = List.of(new ProductDto());
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(dtos).when(serviceMock).findAll();
 
@@ -154,7 +155,7 @@ class ProductControllerTest {
 
     @Test
     void findProductsByName_thenReturnProducts() throws Exception {
-        List<ProductDto> dtos = List.of(new ProductDto());
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(dtos).when(serviceMock).findAllByNameLike(NAME);
 
@@ -173,7 +174,7 @@ class ProductControllerTest {
 
     @Test
     void findProductsByProducerId_thenReturnProducts() throws Exception {
-        List<ProductDto> dtos = List.of(new ProductDto());
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(dtos).when(serviceMock).findAllByProducerId(PRODUCER_ID);
 
@@ -192,7 +193,7 @@ class ProductControllerTest {
 
     @Test
     void findProductsByGroupId_thenReturnProducts() throws Exception {
-        List<ProductDto> dtos = List.of(new ProductDto());
+        List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(dtos).when(serviceMock).findAllByProductGroupId(GROUP_ID);
 

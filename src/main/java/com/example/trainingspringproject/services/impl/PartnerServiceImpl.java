@@ -9,6 +9,7 @@ import com.example.trainingspringproject.repositories.PartnerRepository;
 import com.example.trainingspringproject.services.PartnerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -74,7 +75,7 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public List<PartnerDto> findAll() {
         List<PartnerDto> list = mapper.entityToDto(repository.findAll());
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Partner", "all");
         return list;
     }
@@ -94,7 +95,7 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public List<PartnerDto> findAllByAddressLike(String address) {
         List<PartnerDto> list = mapper.entityToDto(repository.findAllByAddressLike(address));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Partner", "address = " + address);
         return list;
     }
@@ -102,7 +103,7 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public List<PartnerDto> findAllByEmailLike(String email) {
         List<PartnerDto> list = mapper.entityToDto(repository.findAllByEmailLike(email));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Partner", "email = " + email);
         return list;
     }

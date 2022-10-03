@@ -1,7 +1,10 @@
 package com.example.trainingspringproject.services.impl;
 
 import com.example.trainingspringproject.exceptions.NothingFoundException;
-import com.example.trainingspringproject.models.dtos.*;
+import com.example.trainingspringproject.models.dtos.InvoiceRequestDto;
+import com.example.trainingspringproject.models.dtos.InvoiceResponseDto;
+import com.example.trainingspringproject.models.dtos.ItemRequestDto;
+import com.example.trainingspringproject.models.dtos.ProductDto;
 import com.example.trainingspringproject.models.entities.Invoice;
 import com.example.trainingspringproject.models.enums.TransactionType;
 import com.example.trainingspringproject.models.mappers.InvoiceMapper;
@@ -10,32 +13,43 @@ import com.example.trainingspringproject.services.InvoiceService;
 import com.example.trainingspringproject.services.ItemService;
 import com.example.trainingspringproject.services.ProductService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class InvoiceServiceImplTest {
-    @Autowired
     private InvoiceService service;
+    private Validator validator;
 
-    @MockBean
+    @Mock
     private InvoiceRepository repositoryMock;
-    @MockBean
+    @Mock
     private InvoiceMapper mapperMock;
-    @MockBean
+    @Mock
     private ItemService itemServiceMock;
-    @MockBean
+    @Mock
     private ProductService productServiceMock;
+
+    @BeforeEach
+    void init() {
+        service = new InvoiceServiceImpl(repositoryMock, mapperMock, itemServiceMock, productServiceMock);
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
 
     private final Long ID = 1L;
     private final Long PARTNER_ID = 2L;
@@ -61,6 +75,7 @@ class InvoiceServiceImplTest {
 
         service.create(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
         verify(itemServiceMock, times(ITEMS.size())).create(any(ItemRequestDto.class), eq(ID), eq(PRICE));
         verify(productServiceMock, times(ITEMS.size())).income(ITEM_PRODUCT_ID, ITEM_QUANTITY);
@@ -79,16 +94,17 @@ class InvoiceServiceImplTest {
 
         service.create(dto);
 
+        Assertions.assertTrue(validator.validate(dto).isEmpty());
         verify(repositoryMock, times(1)).save(entity);
         verify(itemServiceMock, times(ITEMS.size())).create(any(ItemRequestDto.class), eq(ID), eq(PRICE));
         verify(productServiceMock, times(ITEMS.size())).outcome(ITEM_PRODUCT_ID, ITEM_QUANTITY);
     }
 
     @Test
-    void create_whenInvoiceHasInvalidParameters_thenThrowException() {
+    void create_whenInvoiceHasInvalidParameters_thenValidationExceptionCreated() {
         InvoiceRequestDto dto = new InvoiceRequestDto();
 
-        Assertions.assertThrows(ConstraintViolationException.class, () -> service.create(dto));
+        Assertions.assertFalse(validator.validate(dto).isEmpty());
     }
 
     @Test
@@ -129,9 +145,8 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAll_whenInvoicesExist_thenReturnInvoices() {
-        List<Invoice> entities = new ArrayList<>();
-        List<InvoiceResponseDto> dtos = new ArrayList<>();
-        dtos.add(new InvoiceResponseDto());
+        List<Invoice> entities = Collections.emptyList();
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAll();
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -141,9 +156,8 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByPartnerId_whenInvoicesWithPartnerIdExist_thenReturnInvoices() {
-        List<Invoice> entities = new ArrayList<>();
-        List<InvoiceResponseDto> dtos = new ArrayList<>();
-        dtos.add(new InvoiceResponseDto());
+        List<Invoice> entities = Collections.emptyList();
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByPartnerId(PARTNER_ID);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -153,7 +167,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByPartnerId_whenInvoicesWithPartnerIdNotExist_thenThrowException() {
-        List<Invoice> entities = new ArrayList<>();
+        List<Invoice> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByPartnerId(PARTNER_ID);
 
@@ -162,9 +176,8 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByWorkerId_whenInvoicesWithWorkerIdExist_thenReturnInvoices() {
-        List<Invoice> entities = new ArrayList<>();
-        List<InvoiceResponseDto> dtos = new ArrayList<>();
-        dtos.add(new InvoiceResponseDto());
+        List<Invoice> entities = Collections.emptyList();
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByWorkerId(WORKER_ID);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -174,7 +187,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByWorkerId_whenInvoicesWithWorkerIdNotExist_thenThrowException() {
-        List<Invoice> entities = new ArrayList<>();
+        List<Invoice> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByWorkerId(WORKER_ID);
 
@@ -183,9 +196,8 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByType_whenInvoicesWithTypeExist_thenReturnInvoices() {
-        List<Invoice> entities = new ArrayList<>();
-        List<InvoiceResponseDto> dtos = new ArrayList<>();
-        dtos.add(new InvoiceResponseDto());
+        List<Invoice> entities = Collections.emptyList();
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByType(TYPE_INCOME);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -195,7 +207,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByType_whenInvoicesWithTypeNotExist_thenThrowException() {
-        List<Invoice> entities = new ArrayList<>();
+        List<Invoice> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByType(TYPE_INCOME);
 
@@ -204,9 +216,8 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByDate_whenInvoicesWithDateExist_thenReturnInvoices() {
-        List<Invoice> entities = new ArrayList<>();
-        List<InvoiceResponseDto> dtos = new ArrayList<>();
-        dtos.add(new InvoiceResponseDto());
+        List<Invoice> entities = Collections.emptyList();
+        List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByDate(DATE);
         doReturn(dtos).when(mapperMock).entityToDto(entities);
@@ -216,7 +227,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByDate_whenInvoicesWithDateNotExist_thenThrowException() {
-        List<Invoice> entities = new ArrayList<>();
+        List<Invoice> entities = Collections.emptyList();
 
         doReturn(entities).when(repositoryMock).findAllByDate(DATE);
 

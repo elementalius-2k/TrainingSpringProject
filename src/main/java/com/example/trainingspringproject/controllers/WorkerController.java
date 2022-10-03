@@ -22,25 +22,25 @@ public class WorkerController {
 
     @PostMapping("/create")
     public void createWorker(@Valid @RequestBody WorkerDto dto) {
-        logger.info("Create worker");
+        logger.info("Create worker " + dto.toString());
         service.create(dto);
     }
 
     @PutMapping("/update")
     public void updateWorker(@Valid @RequestBody WorkerDto dto) {
-        logger.info("Update worker");
+        logger.info("Update worker " + dto.toString());
         service.update(dto);
     }
 
     @DeleteMapping("/delete")
     public void deleteWorker(@RequestParam(name = "id") Long id) {
-        logger.info("Delete worker");
+        logger.info("Delete worker by id = " + id);
         service.delete(id);
     }
 
     @GetMapping("/find-by-id")
     public WorkerDto findWorkerById(@RequestParam(name = "id") Long id) {
-        logger.info("Get worker by id");
+        logger.info("Get worker by id = " + id);
         return service.findById(id);
     }
 
@@ -52,13 +52,13 @@ public class WorkerController {
 
     @GetMapping("/find-by-name")
     public WorkerDto findWorkerByName(@RequestParam(name = "name") String name) {
-        logger.info("Get worker by name");
+        logger.info("Get worker by name = " + name);
         return service.findByName(name);
     }
 
     @GetMapping("/find-by-job")
     public List<WorkerDto> findWorkersByJob(@RequestParam(name = "job") String job) {
-        logger.info("Get workers by job");
+        logger.info("Get workers by job = " + job);
         return service.findAllByJob(job);
     }
 }

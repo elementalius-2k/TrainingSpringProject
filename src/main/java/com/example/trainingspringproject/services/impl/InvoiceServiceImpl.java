@@ -13,6 +13,7 @@ import com.example.trainingspringproject.services.ItemService;
 import com.example.trainingspringproject.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -44,13 +45,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         List<ItemRequestDto> items = dto.getItems();
         for (ItemRequestDto item: items) {
-            if (dto.getType().equals(TransactionType.INCOME)) {
-                productService.income(item.getProductId(), item.getQuantity());
-                itemService.create(item, invoice.getId(), productService.findById(item.getProductId()).getIncomePrice());
-            }
-            if (dto.getType().equals(TransactionType.OUTCOME)) {
-                productService.outcome(item.getProductId(), item.getQuantity());
-                itemService.create(item, invoice.getId(), productService.findById(item.getProductId()).getOutcomePrice());
+            switch (dto.getType()) {
+                case INCOME:
+                    productService.income(item.getProductId(), item.getQuantity());
+                    itemService.create(item, invoice.getId(), productService.findById(item.getProductId()).getIncomePrice());
+                    break;
+                case OUTCOME:
+                    productService.outcome(item.getProductId(), item.getQuantity());
+                    itemService.create(item, invoice.getId(), productService.findById(item.getProductId()).getOutcomePrice());
+                    break;
             }
         }
     }
@@ -72,7 +75,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponseDto> findAll() {
         List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAll());
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Invoice", "all");
         return list;
     }
@@ -80,7 +83,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponseDto> findAllByPartnerId(Long id) {
         List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByPartnerId(id));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Invoice", "partner id = " + id);
         return list;
     }
@@ -88,7 +91,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponseDto> findAllByWorkerId(Long id) {
         List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByWorkerId(id));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Invoice", "worker id = " + id);
         return list;
     }
@@ -96,7 +99,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponseDto> findAllByType(TransactionType type) {
         List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByType(type));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Invoice", "type = " + type);
         return list;
     }
@@ -104,7 +107,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponseDto> findAllByDate(LocalDate date) {
         List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByDate(date));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Invoice", "date = " + date.toString());
         return list;
     }

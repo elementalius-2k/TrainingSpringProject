@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -153,7 +154,7 @@ class ProducerControllerTest {
 
     @Test
     void findAllProducers_thenReturnProducers() throws Exception {
-        List<ProducerDto> dtos = List.of(new ProducerDto());
+        List<ProducerDto> dtos = Collections.singletonList(new ProducerDto());
 
         doReturn(dtos).when(serviceMock).findAll();
 
@@ -191,7 +192,7 @@ class ProducerControllerTest {
 
     @Test
     void findProducersByAddress_thenReturnProducers() throws Exception {
-        List<ProducerDto> dtos = List.of(new ProducerDto());
+        List<ProducerDto> dtos = Collections.singletonList(new ProducerDto());
 
         doReturn(dtos).when(serviceMock).findAllByAddressLike(ADDRESS);
 

@@ -10,7 +10,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -32,6 +31,6 @@ public abstract class ItemMapper {
     @Mapping(target = "productId", expression = "java(entity.getProduct().getId())")
     public abstract ItemResponseDto entityToDto(Item entity);
 
-    public abstract List<Item> dtoToEntity(Collection<ItemRequestDto> dto);
-    public abstract List<ItemResponseDto> entityToDto(Collection<Item> entity);
+    public abstract List<Item> dtoToEntity(Iterable<ItemRequestDto> dto);
+    public abstract List<ItemResponseDto> entityToDto(Iterable<Item> entity);
 }

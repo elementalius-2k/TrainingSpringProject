@@ -9,6 +9,7 @@ import com.example.trainingspringproject.repositories.ProductGroupRepository;
 import com.example.trainingspringproject.services.ProductGroupService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -68,7 +69,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     @Override
     public List<ProductGroupDto> findAll() {
         List<ProductGroupDto> list = mapper.entityToDto(repository.findAll());
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Product group", "all");
         return list;
     }

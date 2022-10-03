@@ -9,6 +9,7 @@ import com.example.trainingspringproject.repositories.ProductRepository;
 import com.example.trainingspringproject.services.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -58,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> findAll() {
         List<ProductDto> list = mapper.entityToDto(repository.findAll());
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Product", "all");
         return list;
     }
@@ -66,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> findAllByNameLike(String name) {
         List<ProductDto> list = mapper.entityToDto(repository.findAllByNameLike(name));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Product", "name = " + name);
         return list;
     }
@@ -74,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> findAllByProducerId(Long producerId) {
         List<ProductDto> list = mapper.entityToDto(repository.findAllByProducerId(producerId));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Product", "producer id = " + producerId);
         return list;
     }
@@ -82,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> findAllByProductGroupId(Long groupId) {
         List<ProductDto> list = mapper.entityToDto(repository.findAllByProductGroupId(groupId));
-        if (list.isEmpty())
+        if (CollectionUtils.isEmpty(list))
             throw new NothingFoundException("Product", "group id = " + groupId);
         return list;
     }

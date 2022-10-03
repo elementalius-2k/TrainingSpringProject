@@ -26,19 +26,19 @@ public class InvoiceController {
 
     @PostMapping("/create")
     public void createInvoice(@Valid @RequestBody InvoiceRequestDto dto) {
-        logger.info("Create invoice");
+        logger.info("Create invoice " + dto.toString());
         service.create(dto);
     }
 
     @DeleteMapping("/delete")
     public void deleteInvoice(@RequestParam(name = "id") Long id) {
-        logger.info("Delete invoice");
+        logger.info("Delete invoice by id = " + id);
         service.delete(id);
     }
 
     @GetMapping("/find-by-id")
     public InvoiceResponseDto findInvoiceById(@RequestParam(name = "id") Long id) {
-        logger.info("Get invoice by id");
+        logger.info("Get invoice by id = " + id);
         return service.findById(id);
     }
 
@@ -50,26 +50,26 @@ public class InvoiceController {
 
     @GetMapping("/find-by-partner-id")
     public List<InvoiceResponseDto> findInvoicesByPartnerId(@RequestParam(name = "partner-id") Long partnerId) {
-        logger.info("Get invoices by partner id");
+        logger.info("Get invoices by partner id = " + partnerId);
         return service.findAllByPartnerId(partnerId);
     }
 
     @GetMapping("/find-by-worker-id")
     public List<InvoiceResponseDto> findInvoicesByWorkerId(@RequestParam(name = "worker-id") Long workerId) {
-        logger.info("Get invoices by worker id");
+        logger.info("Get invoices by worker id = " + workerId);
         return service.findAllByWorkerId(workerId);
     }
 
     @GetMapping("/find-by-type")
     public List<InvoiceResponseDto> findInvoicesByType(@RequestParam(name = "type") TransactionType type) {
-        logger.info("Get invoices by type");
+        logger.info("Get invoices by type " + type);
         return service.findAllByType(type);
     }
 
     @GetMapping("/find-by-date")
     public List<InvoiceResponseDto> findInvoicesByDate(@RequestParam(name = "date")
                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        logger.info("Get invoices by date");
+        logger.info("Get invoices by date = " + date.toString());
         return service.findAllByDate(date);
     }
 }
