@@ -30,8 +30,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional
     public void create(@Valid WorkerDto dto) {
         //проверка нарушения уникальности name
-        if (repository.findByName(dto.getName()).isPresent())
-            throw new AlreadyExistsException("Worker with name " + dto.getName());
+        checkName(dto.getName());
 
         Worker worker = mapper.dtoToEntity(dto);
         worker.setId(null);
@@ -42,11 +41,10 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional
     public void update(@Valid WorkerDto dto) {
         //проверка существования записи с нужным id
-        Worker oldData = repository.findById(dto.getId())
-                .orElseThrow(() -> new NothingFoundException("Worker", "id = " + dto.getId()));
+        Worker oldData = getByIdOrElseThrow(dto.getId());
         //если произошло изменение поля name, надо проверить, не нарушает ли новое значение уникальности в базе
-        if (!dto.getName().equals(oldData.getName()) && repository.findByName(dto.getName()).isPresent())
-            throw new AlreadyExistsException("Worker with name " + dto.getName());
+        if (!dto.getName().equals(oldData.getName()))
+            checkName(dto.getName());
 
         Worker newData = mapper.dtoToEntity(dto);
         newData.setId(oldData.getId());
@@ -55,23 +53,19 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public void delete(Long id) {
-        Worker worker = repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Worker", "id = " + id));
-        repository.delete(worker);
+        repository.delete(getByIdOrElseThrow(id));
     }
 
     @Override
     public WorkerDto findById(Long id) {
-        return mapper.entityToDto(repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Worker" , "id = " + id)));
+        return mapper.entityToDto(getByIdOrElseThrow(id));
     }
 
     @Override
     public List<WorkerDto> findAll() {
-        List<WorkerDto> list = mapper.entityToDto(repository.findAll());
-        if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Worker", "all");
-        return list;
+        List<Worker> list = (List<Worker>) repository.findAll();
+        checkEmptyList(list, "all");
+        return mapper.entityToDto(list);
     }
 
     @Override
@@ -82,9 +76,23 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public List<WorkerDto> findAllByJob(String job) {
-        List<WorkerDto> list = mapper.entityToDto(repository.findAllByJob(job));
+        List<Worker> list = repository.findAllByJob(job);
+        checkEmptyList(list, "job = " + job);
+        return mapper.entityToDto(list);
+    }
+
+    private void checkName(String name) {
+        if (repository.findByName(name).isPresent())
+            throw new AlreadyExistsException("Worker with name " + name);
+    }
+
+    private Worker getByIdOrElseThrow(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NothingFoundException("Worker", "id = " + id));
+    }
+
+    private void checkEmptyList(List<Worker> list, String exceptionMessage) {
         if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Worker", "job = " + job);
-        return list;
+            throw new NothingFoundException("Worker", exceptionMessage);
     }
 }

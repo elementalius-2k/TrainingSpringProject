@@ -2,6 +2,7 @@ package com.example.trainingspringproject.controllers;
 
 import com.example.trainingspringproject.models.dtos.ProducerDto;
 import com.example.trainingspringproject.services.ProducerService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/producer")
+@RequiredArgsConstructor
 public class ProducerController {
     private final ProducerService service;
 
     Logger logger = LoggerFactory.getLogger(ProducerController.class);
-
-    public ProducerController(ProducerService service) {
-        this.service = service;
-    }
 
     @PostMapping("/create")
     public void createProducer(@Valid @RequestBody ProducerDto dto) {

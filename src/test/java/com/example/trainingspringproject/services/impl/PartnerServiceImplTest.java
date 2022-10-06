@@ -181,7 +181,7 @@ class PartnerServiceImplTest {
 
     @Test
     void findAll_whenPartnersExist_thenReturnAllPartners() {
-        List<Partner> entities = Collections.emptyList();
+        List<Partner> entities = Collections.singletonList(new Partner());
         List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(entities).when(repositoryMock).findAll();
@@ -237,7 +237,7 @@ class PartnerServiceImplTest {
 
     @Test
     void findAllByAddressLike_whenPartnersWithAddressExist_thenReturnPartners() {
-        List<Partner> entities = Collections.emptyList();
+        List<Partner> entities = Collections.singletonList(new Partner());
         List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(entities).when(repositoryMock).findAllByAddressLike(ADDRESS);
@@ -257,7 +257,7 @@ class PartnerServiceImplTest {
 
     @Test
     void findAllByEmailLike_whenPartnersWithEmailExist_thenReturnPartners() {
-        List<Partner> entities = Collections.emptyList();
+        List<Partner> entities = Collections.singletonList(new Partner());
         List<PartnerDto> dtos = Collections.singletonList(new PartnerDto());
 
         doReturn(entities).when(repositoryMock).findAllByEmailLike(EMAIL);

@@ -145,7 +145,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAll_whenInvoicesExist_thenReturnInvoices() {
-        List<Invoice> entities = Collections.emptyList();
+        List<Invoice> entities = Collections.singletonList(new Invoice());
         List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAll();
@@ -156,7 +156,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByPartnerId_whenInvoicesWithPartnerIdExist_thenReturnInvoices() {
-        List<Invoice> entities = Collections.emptyList();
+        List<Invoice> entities = Collections.singletonList(new Invoice());
         List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByPartnerId(PARTNER_ID);
@@ -176,7 +176,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByWorkerId_whenInvoicesWithWorkerIdExist_thenReturnInvoices() {
-        List<Invoice> entities = Collections.emptyList();
+        List<Invoice> entities = Collections.singletonList(new Invoice());
         List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByWorkerId(WORKER_ID);
@@ -196,7 +196,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByType_whenInvoicesWithTypeExist_thenReturnInvoices() {
-        List<Invoice> entities = Collections.emptyList();
+        List<Invoice> entities = Collections.singletonList(new Invoice());
         List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByType(TYPE_INCOME);
@@ -216,7 +216,7 @@ class InvoiceServiceImplTest {
 
     @Test
     void findAllByDate_whenInvoicesWithDateExist_thenReturnInvoices() {
-        List<Invoice> entities = Collections.emptyList();
+        List<Invoice> entities = Collections.singletonList(new Invoice());
         List<InvoiceResponseDto> dtos = Collections.singletonList(new InvoiceResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByDate(DATE);

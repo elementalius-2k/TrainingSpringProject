@@ -152,7 +152,7 @@ class ProducerServiceImplTest {
 
     @Test
     void findAll_whenProducerExist_thenReturnAllProducers() {
-        List<Producer> entities = Collections.emptyList();
+        List<Producer> entities = Collections.singletonList(new Producer());
         List<ProducerDto> dtos = Collections.singletonList(new ProducerDto());
 
         doReturn(entities).when(repositoryMock).findAll();
@@ -190,7 +190,7 @@ class ProducerServiceImplTest {
 
     @Test
     void findAllByAddressLike_whenProducersWithAddressExist_whenReturnProducers() {
-        List<Producer> entities = Collections.emptyList();
+        List<Producer> entities = Collections.singletonList(new Producer());
         List<ProducerDto> dtos = Collections.singletonList(new ProducerDto());
 
         doReturn(entities).when(repositoryMock).findAllByAddressLike(ADDRESS);

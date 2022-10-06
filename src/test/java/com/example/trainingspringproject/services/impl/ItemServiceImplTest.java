@@ -87,7 +87,7 @@ class ItemServiceImplTest {
 
     @Test
     void findAllByInvoiceId_whenItemsWithInvoiceIdExist_thenReturnItems() {
-        List<Item> entities = Collections.emptyList();
+        List<Item> entities = Collections.singletonList(new Item());
         List<ItemResponseDto> dtos = Collections.singletonList(new ItemResponseDto());
 
         doReturn(entities).when(repositoryMock).findAllByInvoiceId(INVOICE_ID);

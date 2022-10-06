@@ -151,7 +151,7 @@ class WorkerServiceImplTest {
 
     @Test
     void findAll_whenWorkersExist_thenReturnAllWorkers() {
-        List<Worker> entities = Collections.emptyList();
+        List<Worker> entities = Collections.singletonList(new Worker());
         List<WorkerDto> dtos = Collections.singletonList(new WorkerDto());
 
         doReturn(entities).when(repositoryMock).findAll();
@@ -189,7 +189,7 @@ class WorkerServiceImplTest {
 
     @Test
     void findAllByJob_whenWorkersWithJobExist_thenReturnWorkers() {
-        List<Worker> entities = Collections.emptyList();
+        List<Worker> entities = Collections.singletonList(new Worker());
         List<WorkerDto> dtos = Collections.singletonList(new WorkerDto());
 
         doReturn(entities).when(repositoryMock).findAllByJob(JOB);

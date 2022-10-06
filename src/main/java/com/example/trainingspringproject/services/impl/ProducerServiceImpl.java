@@ -30,8 +30,7 @@ public class ProducerServiceImpl implements ProducerService {
     @Transactional
     public void create(@Valid ProducerDto dto) {
         //проверка нарушения уникальности name
-        if (repository.findByName(dto.getName()).isPresent())
-            throw new AlreadyExistsException("Producer with name " + dto.getName());
+        checkName(dto.getName());
 
         Producer producer = mapper.dtoToEntity(dto);
         producer.setId(null);
@@ -42,11 +41,10 @@ public class ProducerServiceImpl implements ProducerService {
     @Transactional
     public void update(@Valid ProducerDto dto) {
         //проверка существования записи с нужным id
-        Producer oldData = repository.findById(dto.getId())
-                .orElseThrow(() -> new NothingFoundException("Producer", "id = " + dto.getId()));
+        Producer oldData = getByIdOrElseThrow(dto.getId());
         //если произошло изменение поля name, надо проверить, не нарушает ли новое значение уникальности в базе
-        if (!dto.getName().equals(oldData.getName()) && repository.findByName(dto.getName()).isPresent())
-            throw new AlreadyExistsException("Producer with name " + dto.getName());
+        if (!dto.getName().equals(oldData.getName()))
+            checkName(dto.getName());
 
         Producer newData = mapper.dtoToEntity(dto);
         newData.setId(oldData.getId());
@@ -55,23 +53,19 @@ public class ProducerServiceImpl implements ProducerService {
 
     @Override
     public void delete(Long id) {
-        Producer producer = repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Producer", "id = " + id));
-        repository.delete(producer);
+        repository.delete(getByIdOrElseThrow(id));
     }
 
     @Override
     public ProducerDto findById(Long id) {
-        return mapper.entityToDto(repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Producer", "id = " + id)));
+        return mapper.entityToDto(getByIdOrElseThrow(id));
     }
 
     @Override
     public List<ProducerDto> findAll() {
-        List<ProducerDto> list = mapper.entityToDto(repository.findAll());
-        if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Producer", "all");
-        return list;
+        List<Producer> list = (List<Producer>) repository.findAll();
+        checkEmptyList(list, "all");
+        return mapper.entityToDto(list);
     }
 
     @Override
@@ -82,9 +76,23 @@ public class ProducerServiceImpl implements ProducerService {
 
     @Override
     public List<ProducerDto> findAllByAddressLike(String address) {
-        List<ProducerDto> list = mapper.entityToDto(repository.findAllByAddressLike(address));
+        List<Producer> list = repository.findAllByAddressLike(address);
+        checkEmptyList(list, "address = " + address);
+        return mapper.entityToDto(list);
+    }
+
+    private void checkName(String name) {
+        if (repository.findByName(name).isPresent())
+            throw new AlreadyExistsException("Producer with name " + name);
+    }
+
+    private Producer getByIdOrElseThrow(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NothingFoundException("Producer", "id = " + id));
+    }
+
+    private void checkEmptyList(List<Producer> list, String exceptionMessage) {
         if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Producer", "address = " + address);
-        return list;
+            throw new NothingFoundException("Producer", exceptionMessage);
     }
 }

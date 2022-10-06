@@ -137,7 +137,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAll_whenProductsExist_thenReturnProducts() {
-        List<Product> entities = Collections.emptyList();
+        List<Product> entities = Collections.singletonList(new Product());
         List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAll();
@@ -157,7 +157,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByNameLike_whenProductsWithNameExist_thenReturnProducts() {
-        List<Product> entities = Collections.emptyList();
+        List<Product> entities = Collections.singletonList(new Product());
         List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAllByNameLike(NAME);
@@ -177,7 +177,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByProducerId_whenProductsWithProducerIdExists_thenReturnProducts() {
-        List<Product> entities = Collections.emptyList();
+        List<Product> entities = Collections.singletonList(new Product());
         List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAllByProducerId(PRODUCER_ID);
@@ -197,7 +197,7 @@ class ProductServiceImplTest {
 
     @Test
     void findAllByProductGroupId_whenProductsWithGroupIdExist_thenReturnProducts() {
-        List<Product> entities = Collections.emptyList();
+        List<Product> entities = Collections.singletonList(new Product());
         List<ProductDto> dtos = Collections.singletonList(new ProductDto());
 
         doReturn(entities).when(repositoryMock).findAllByProductGroupId(GROUP_ID);

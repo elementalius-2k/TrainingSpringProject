@@ -2,6 +2,7 @@ package com.example.trainingspringproject.controllers;
 
 import com.example.trainingspringproject.models.dtos.WorkerDto;
 import com.example.trainingspringproject.services.WorkerService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/worker")
+@RequiredArgsConstructor
 public class WorkerController {
     private final WorkerService service;
 
     Logger logger = LoggerFactory.getLogger(WorkerController.class);
-
-    public WorkerController(WorkerService service) {
-        this.service = service;
-    }
 
     @PostMapping("/create")
     public void createWorker(@Valid @RequestBody WorkerDto dto) {

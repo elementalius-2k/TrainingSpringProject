@@ -21,29 +21,26 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {NothingFoundException.class, NotEnoughProductsException.class})
     public ResponseEntity<Object> handleNotFoundException(RuntimeException e) {
-        logger.error(e.getMessage(), e);
         return handle(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = AlreadyExistsException.class)
     public ResponseEntity<Object> handleConflictException(AlreadyExistsException e) {
-        logger.error(e.getMessage(), e);
         return handle(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class, MethodArgumentNotValidException.class})
     public ResponseEntity<Object> handleBadRequestException(RuntimeException e) {
-        logger.error(e.getMessage(), e);
         return handle(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<Object> handleOtherException(RuntimeException e) {
-        logger.error(e.getMessage(), e);
         return handle(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ResponseEntity<Object> handle(RuntimeException e, HttpStatus status) {
+        logger.error(e.getMessage(), e);
         Map<String, String> body = new LinkedHashMap<>();
         body.put("message", e.getMessage());
         return new ResponseEntity<>(body, status);

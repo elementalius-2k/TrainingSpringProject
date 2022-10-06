@@ -1,9 +1,6 @@
 package com.example.trainingspringproject.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,6 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ProductGroup {
     @Column(name = "id")
     @Id
@@ -35,13 +33,5 @@ public class ProductGroup {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "ProductGroup{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

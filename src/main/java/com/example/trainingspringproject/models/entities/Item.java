@@ -1,9 +1,6 @@
 package com.example.trainingspringproject.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Positive;
@@ -16,6 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Item {
     @Column(name = "id")
     @Id
@@ -49,15 +47,5 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", invoice=" + invoice +
-                ", product=" + product +
-                ", quantity=" + quantity +
-                '}';
     }
 }

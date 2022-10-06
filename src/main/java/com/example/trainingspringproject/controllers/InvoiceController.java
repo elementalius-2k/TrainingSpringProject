@@ -4,6 +4,7 @@ import com.example.trainingspringproject.models.dtos.InvoiceRequestDto;
 import com.example.trainingspringproject.models.dtos.InvoiceResponseDto;
 import com.example.trainingspringproject.models.enums.TransactionType;
 import com.example.trainingspringproject.services.InvoiceService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,14 +16,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/invoice")
+@RequiredArgsConstructor
 public class InvoiceController {
     private final InvoiceService service;
 
     Logger logger = LoggerFactory.getLogger(InvoiceController.class);
-
-    public InvoiceController(InvoiceService service) {
-        this.service = service;
-    }
 
     @PostMapping("/create")
     public void createInvoice(@Valid @RequestBody InvoiceRequestDto dto) {

@@ -11,6 +11,7 @@ import com.example.trainingspringproject.repositories.InvoiceRepository;
 import com.example.trainingspringproject.services.InvoiceService;
 import com.example.trainingspringproject.services.ItemService;
 import com.example.trainingspringproject.services.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -22,19 +23,12 @@ import java.util.List;
 
 @Service
 @Validated
+@RequiredArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository repository;
     private final InvoiceMapper mapper;
     private final ItemService itemService;
     private final ProductService productService;
-
-    public InvoiceServiceImpl(InvoiceRepository repository, InvoiceMapper mapper,
-                              ItemService itemService, ProductService productService) {
-        this.repository = repository;
-        this.mapper = mapper;
-        this.itemService = itemService;
-        this.productService = productService;
-    }
 
     @Override
     @Transactional
@@ -61,54 +55,56 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Invoice invoice = repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + id));
-        repository.delete(invoice);
+        repository.delete(getByIdOrElseThrow(id));
     }
 
     @Override
     public InvoiceResponseDto findById(Long id) {
-        return mapper.entityToDto(repository.findById(id)
-                .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + id)));
+        return mapper.entityToDto(getByIdOrElseThrow(id));
     }
 
     @Override
     public List<InvoiceResponseDto> findAll() {
-        List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAll());
-        if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Invoice", "all");
-        return list;
+        List<Invoice> list = (List<Invoice>) repository.findAll();
+        checkEmptyList(list, "all");
+        return mapper.entityToDto(list);
     }
 
     @Override
     public List<InvoiceResponseDto> findAllByPartnerId(Long id) {
-        List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByPartnerId(id));
-        if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Invoice", "partner id = " + id);
-        return list;
+        List<Invoice> list = repository.findAllByPartnerId(id);
+        checkEmptyList(list, "partner id = " + id);
+        return mapper.entityToDto(list);
     }
 
     @Override
     public List<InvoiceResponseDto> findAllByWorkerId(Long id) {
-        List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByWorkerId(id));
-        if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Invoice", "worker id = " + id);
-        return list;
+        List<Invoice> list = repository.findAllByWorkerId(id);
+        checkEmptyList(list, "worker id = " + id);
+        return mapper.entityToDto(list);
     }
 
     @Override
     public List<InvoiceResponseDto> findAllByType(TransactionType type) {
-        List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByType(type));
-        if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Invoice", "type = " + type);
-        return list;
+        List<Invoice> list = repository.findAllByType(type);
+        checkEmptyList(list, "type = " + type);
+        return mapper.entityToDto(list);
     }
 
     @Override
     public List<InvoiceResponseDto> findAllByDate(LocalDate date) {
-        List<InvoiceResponseDto> list = mapper.entityToDto(repository.findAllByDate(date));
+        List<Invoice> list = repository.findAllByDate(date);
+        checkEmptyList(list, "date = " + date.toString());
+        return mapper.entityToDto(list);
+    }
+
+    private Invoice getByIdOrElseThrow(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NothingFoundException("Invoice", "id = " + id));
+    }
+
+    private void checkEmptyList(List<Invoice> list, String exceptionMessage) {
         if (CollectionUtils.isEmpty(list))
-            throw new NothingFoundException("Invoice", "date = " + date.toString());
-        return list;
+            throw new NothingFoundException("Invoice", exceptionMessage);
     }
 }

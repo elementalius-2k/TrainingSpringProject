@@ -150,7 +150,7 @@ class ProductGroupServiceImplTest {
 
     @Test
     void findAll_whenGroupsExist_thenReturnAllGroups() {
-        List<ProductGroup> entities = Collections.emptyList();
+        List<ProductGroup> entities = Collections.singletonList(new ProductGroup());
         List<ProductGroupDto> dtos = Collections.singletonList(new ProductGroupDto());
 
         doReturn(entities).when(repositoryMock).findAll();

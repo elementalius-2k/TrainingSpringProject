@@ -1,10 +1,7 @@
 package com.example.trainingspringproject.models.entities;
 
 import com.example.trainingspringproject.models.enums.TransactionType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,6 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Invoice {
     @Column(name = "id")
     @Id
@@ -48,16 +46,5 @@ public class Invoice {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Invoice{" +
-                "id=" + id +
-                ", partner=" + partner +
-                ", worker=" + worker +
-                ", type=" + type +
-                ", date=" + date +
-                '}';
     }
 }
